@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Notre Mariage 💍"/>
+<title>💍 Notre Mariage — 12 juin 2027</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#FFF8F5;font-family:'Helvetica Neue',Arial,sans-serif;color:#5A4A42;min-height:100vh;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#EDE0D4;}
+::-webkit-scrollbar-thumb{background:#FAD4D8;border-radius:99px;}
+input,select,textarea,button{font-family:inherit;font-size:14px;}
+button{cursor:pointer;}
+textarea{resize:vertical;}
+a{text-decoration:none;}
+
+#header{background:linear-gradient(135deg,#FAD4D8 0%,#E8E2F7 100%);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(242,167,176,0.2);position:sticky;top:0;z-index:200;}
+#header h1{font-size:1.2rem;color:#C97080;font-weight:700;}
+#header p{font-size:0.7rem;color:#9A8880;}
+.header-btns{display:flex;gap:8px;}
+.btn-share{background:#F2A7B0;border:none;border-radius:10px;padding:8px 12px;color:#fff;font-weight:700;font-size:0.82rem;}
+.btn-menu{background:#fff;border:none;border-radius:10px;padding:8px 12px;color:#C97080;font-weight:700;font-size:0.9rem;}
+
+#notif{display:none;background:#D4E8D0;border-bottom:2px solid #A8C5A0;padding:8px 16px;text-align:center;font-size:0.85rem;font-weight:600;color:#5A4A42;position:sticky;top:60px;z-index:190;}
+
+#menu-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:300;}
+#menu-panel{display:none;position:fixed;top:0;right:0;bottom:0;width:80%;max-width:300px;background:#fff;z-index:400;overflow-y:auto;padding:16px;box-shadow:-4px 0 20px rgba(0,0,0,0.1);}
+#menu-panel h3{color:#C97080;margin-bottom:12px;font-size:1.1rem;font-weight:700;}
+.menu-item{display:block;width:100%;text-align:left;background:none;border:1.5px solid #EDE0D4;border-radius:20px;padding:8px 14px;margin-bottom:6px;font-size:0.83rem;color:#5A4A42;}
+.menu-item.active{font-weight:700;}
+.menu-close{float:right;background:none;border:none;font-size:1.5rem;color:#9A8880;margin-top:-4px;line-height:1;}
+
+#tabbar{display:flex;overflow-x:auto;gap:6px;padding:10px 12px;background:#fff;border-bottom:1px solid #EDE0D4;-webkit-overflow-scrolling:touch;}
+#tabbar::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;border-radius:20px;padding:5px 12px;font-size:0.76rem;border:1.5px solid #EDE0D4;background:transparent;color:#9A8880;white-space:nowrap;}
+.tab-btn.active{font-weight:700;color:#5A4A42;}
+
+#content{max-width:720px;margin:0 auto;padding:0 0 80px;}
+.pane{padding:20px 14px;}
+
+.sec-title{font-size:1.4rem;color:#C97080;font-weight:700;margin-bottom:14px;}
+.subtitle{color:#9A8880;font-size:0.83rem;margin-bottom:14px;}
+
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:10px;}
+.card-hdr{width:100%;background:none;border:none;padding:14px 16px;display:flex;align-items:center;gap:10px;text-align:left;}
+.card-body{padding:0 16px 16px;}
+
+.check-item{display:flex;align-items:center;gap:10px;background:#fff;border-radius:12px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:8px;}
+.check-item.done{background:#D4E8D0;}
+.check-item input[type=checkbox]{width:18px;height:18px;flex-shrink:0;accent-color:#A8C5A0;}
+.item-text{flex:1;font-size:0.93rem;}
+.item-text.done{text-decoration:line-through;color:#9A8880;}
+.del-btn{background:none;border:none;color:#9A8880;font-size:1.1rem;padding:0;line-height:1;}
+
+.prog-wrap{background:#EDE0D4;border-radius:99px;height:8px;flex:1;}
+.prog-bar{border-radius:99px;height:8px;}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.prog-lbl{font-size:0.8rem;color:#9A8880;white-space:nowrap;}
+
+.add-row{display:flex;gap:8px;margin-bottom:14px;}
+.add-row input,.add-inp{flex:1;border:1.5px solid #EDE0D4;border-radius:10px;padding:8px 12px;color:#5A4A42;background:#FDF4EC;outline:none;}
+.add-btn{border:none;border-radius:10px;padding:8px 14px;color:#fff;font-weight:700;font-size:1rem;}
+
+.note-box{background:#FDF4EC;border-radius:12px;padding:12px 14px;margin-top:10px;}
+.note-lbl{font-size:0.72rem;color:#9A8880;margin-bottom:4px;}
+.note-box textarea{width:100%;border:none;background:transparent;color:#5A4A42;font-size:0.88rem;line-height:1.6;outline:none;min-height:60px;}
+
+.stats-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+.stat-box{border-radius:12px;padding:10px 14px;text-align:center;min-width:76px;}
+.stat-num{font-size:1.5rem;font-weight:700;}
+.stat-lbl{font-size:0.7rem;color:#9A8880;}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+.form-inp{border:1.5px solid #EDE0D4;border-radius:10px;padding:8px 10px;color:#5A4A42;background:#FDF4EC;outline:none;width:100%;}
+.form-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,0.05);}
+.form-btn{width:100%;border:none;border-radius:10px;padding:10px;font-weight:700;font-size:0.93rem;margin-top:8px;cursor:pointer;}
+
+/* Countdown */
+.cd-wrap{text-align:center;padding:28px 14px;}
+.cd-boxes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:26px;}
+.cd-box{background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 2px 16px rgba(242,167,176,0.18);min-width:75px;}
+.cd-num{font-size:2rem;color:#C97080;font-weight:700;line-height:1;}
+.cd-lbl{font-size:0.68rem;color:#9A8880;margin-top:4px;letter-spacing:.08em;}
+.quote-box{max-width:480px;margin:0 auto;background:#FDF4EC;border-radius:16px;padding:18px 22px;box-shadow:0 1px 8px rgba(242,167,176,0.12);}
+.quote-box textarea{width:100%;border:none;background:transparent;font-size:0.96rem;color:#5A4A42;line-height:1.7;outline:none;min-height:70px;}
+
+/* Budget */
+.budget-item{background:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:8px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+.budget-cat{flex:2;font-weight:600;font-size:0.88rem;min-width:90px;}
+.b-inp{border:1.5px solid #EDE0D4;border-radius:8px;padding:4px 6px;width:72px;color:#5A4A42;background:#FDF4EC;outline:none;}
+
+/* Invités */
+.guest-item{background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:6px;flex-wrap:wrap;}
+.rsvp-sel{border-radius:8px;padding:3px 6px;font-size:0.78rem;border-width:1.5px;border-style:solid;color:#5A4A42;background:transparent;}
+
+/* Plan de table */
+.guest-chip{background:#FAD4D8;border-radius:99px;padding:3px 10px;font-size:0.82rem;display:inline-flex;align-items:center;gap:4px;margin:2px;}
+.chip-del{background:none;border:none;color:#C97080;font-size:0.88rem;padding:0;cursor:pointer;line-height:1;}
+
+/* Contact */
+.contact-item{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:8px;}
+
+/* Musique */
+.music-card{border-left:4px solid #FAD4D8;border-radius:12px;}
+.song-item{display:flex;align-items:center;gap:8px;background:#FDF4EC;border-radius:10px;padding:8px 10px;margin-bottom:6px;}
+.song-item.ok{background:#D4E8D0;}
+
+/* Discours */
+.disc-card{border-left:4px solid #E8C87A;}
+.disc-ta{width:100%;border:1.5px solid #EDE0D4;border-radius:10px;padding:10px;font-size:0.9rem;color:#5A4A42;background:#FDF4EC;line-height:1.7;outline:none;min-height:130px;}
+
+/* Témoin */
+.role-chip{border-radius:99px;padding:2px 10px;font-size:0.73rem;display:inline-block;}
+
+/* Timeline */
+.timeline{position:relative;padding-left:30px;}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:#EDE0D4;}
+.tl-item{position:relative;margin-bottom:10px;}
+.tl-dot{position:absolute;left:-22px;top:14px;width:12px;height:12px;border-radius:50%;background:#FAD4D8;border:2px solid #F2A7B0;}
+.tl-dot.done{background:#A8C5A0;border-color:#A8C5A0;}
+.tl-card{background:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.tl-card.done{background:#D4E8D030;}
+.tl-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tl-t{border:1.5px solid #EDE0D4;border-radius:8px;padding:3px 6px;font-weight:700;color:#C97080;font-size:0.82rem;background:#FDF4EC;width:62px;outline:none;}
+.tl-l{flex:1;border:none;background:transparent;color:#5A4A42;font-size:0.88rem;min-width:90px;outline:none;}
+
+#footer{text-align:center;padding:14px;color:#9A8880;font-size:0.7rem;border-top:1px solid #EDE0D4;}
+.save-section{margin-top:16px;padding-top:16px;border-top:1px solid #EDE0D4;}
+.save-section h4{font-size:0.78rem;color:#9A8880;font-weight:700;letter-spacing:.06em;margin-bottom:8px;}
+.btn-export{display:block;width:100%;text-align:left;background:#D4E8D0;border:none;border-radius:12px;padding:10px 14px;margin-bottom:6px;font-size:0.85rem;color:#5A4A42;font-weight:600;cursor:pointer;}
+.btn-import{display:block;width:100%;text-align:left;background:#E8E2F7;border:none;border-radius:12px;padding:10px 14px;margin-bottom:6px;font-size:0.85rem;color:#5A4A42;font-weight:600;cursor:pointer;}
+.btn-auto-info{font-size:0.72rem;color:#9A8880;text-align:center;padding:4px 0 0;}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div><h1>💍 Notre Mariage</h1><p>12 juin 2027</p></div>
+  <div class="header-btns">
+    <button class="btn-share" onclick="handleShare()">🔗 Partager</button>
+    <button class="btn-menu" onclick="toggleMenu()">☰</button>
+  </div>
+</div>
+<div id="notif"></div>
+<div id="menu-overlay" onclick="toggleMenu()"></div>
+<div id="menu-panel">
+  <button class="menu-close" onclick="toggleMenu()">✕</button>
+  <h3>Navigation 💍</h3>
+  <div id="menu-items"></div>
+  <div class="save-section">
+    <h4>💾 SAUVEGARDE</h4>
+    <button class="btn-export" onclick="exportData()">⬇️ Exporter mes données (.json)</button>
+    <button class="btn-import" onclick="document.getElementById('import-file').click()">⬆️ Restaurer depuis un fichier</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <div class="btn-auto-info">💡 Exportez après chaque modification importante</div>
+  </div>
+</div>
+<div id="tabbar"></div>
+<div id="content"></div>
+<div id="footer">🌸 Menu ☰ → Exporter pour sauvegarder · 🔗 Partager pour synchroniser 🌸</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────
+const TABS=[
+  {id:"countdown",label:"💍 Accueil",color:"#F2A7B0"},
+  {id:"retro",label:"🗓️ Rétroplanning",color:"#C5B8E8"},
+  {id:"todo",label:"✅ À faire",color:"#A8C5A0"},
+  {id:"prestataires",label:"📋 Prestataires",color:"#F7D6C8"},
+  {id:"ceremony",label:"🕊️ Cérémonie",color:"#FAD4D8"},
+  {id:"deco",label:"🌸 Déco",color:"#D4E8D0"},
+  {id:"fairepart",label:"✉️ Faire-part",color:"#F7EDD4"},
+  {id:"invites",label:"👥 Invités",color:"#E8E2F7"},
+  {id:"plantable",label:"🪑 Plan de table",color:"#EDE0D4"},
+  {id:"budget",label:"💶 Budget",color:"#F7EDD4"},
+  {id:"voyage",label:"🌴 Voyage",color:"#D4E8D0"},
+  {id:"contacts",label:"📞 Contacts",color:"#F7D6C8"},
+  {id:"temoins",label:"👑 Témoins & DDH",color:"#E8E2F7"},
+  {id:"musiques",label:"🎵 Musiques",color:"#FAD4D8"},
+  {id:"voeux",label:"💌 Vœux & Discours",color:"#F7EDD4"},
+  {id:"cadeaux",label:"🎁 Liste de mariage",color:"#D4E8D0"},
+  {id:"jourj",label:"📅 Jour J",color:"#F7D6C8"},
+];
+let activeTab="countdown", menuOpen=false;
+
+// ── STORAGE ──────────────────────────────────────────────────────────
+function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+// ── UTILS ────────────────────────────────────────────────────────────
+function esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function gv(id){const e=document.getElementById(id);return e?e.value:"";}
+function notif(msg,bg="#D4E8D0",bd="#A8C5A0"){const n=document.getElementById("notif");n.textContent=msg;n.style.background=bg;n.style.borderBottomColor=bd;n.style.display="block";setTimeout(()=>n.style.display="none",4000);}
+
+// ── EXPORT / IMPORT ──────────────────────────────────────────────────
+function exportData(){
+  const data={};
+  ALL_KEYS.forEach(k=>{
+    const v=localStorage.getItem(k);
+    if(v)try{data[k]=JSON.parse(v);}catch(e){}
+  });
+  const json=JSON.stringify(data,null,2);
+  const blob=new Blob([json],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const now=new Date();
+  const d=now.toISOString().slice(0,10);
+  a.href=url;
+  a.download="mariage-sauvegarde-"+d+".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  notif("✅ Sauvegarde exportée ! Conservez ce fichier précieusement 💾","#D4E8D0","#A8C5A0");
+  if(menuOpen)toggleMenu();
+}
+
+function importData(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      let count=0;
+      Object.entries(data).forEach(([k,v])=>{
+        localStorage.setItem(k,JSON.stringify(v));
+        count++;
+      });
+      event.target.value="";
+      notif("✅ "+count+" données restaurées avec succès ! 💍","#D4E8D0","#A8C5A0");
+      if(menuOpen)toggleMenu();
+      setTimeout(()=>renderContent(),500);
+    }catch(err){
+      notif("❌ Fichier invalide. Utilisez un fichier exporté depuis cette page.","#FAD4D8","#F2A7B0");
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+const ALL_KEYS=["welcome_note","todo_main","prestataires_tasks","ceremony","ceremony_note","deco","deco_note","fairepart","fairepart_note","invites","invites_note","plan_table","plantable_note","budget","budget_note","voyage_dest","voyage_dates","voyage_checklist","contacts","retro","temoins","musiques","voeux","cadeaux","jourj","jourj_note"];
+function handleShare(){
+  const data={};ALL_KEYS.forEach(k=>{const v=localStorage.getItem(k);if(v)try{data[k]=JSON.parse(v);}catch(e){}});
+  try{
+    const enc=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const url=location.href.split("?")[0]+"?d="+enc;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(()=>notif("🔗 Lien copié ! Envoyez-le à votre futur mari 💌"));}
+    else{const ta=document.createElement("textarea");ta.value=url;ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.focus();ta.select();document.execCommand("copy");document.body.removeChild(ta);notif("🔗 Lien copié ! Envoyez-le à votre futur mari 💌");}
+  }catch(e){notif("❌ Impossible de copier","#FAD4D8","#F2A7B0");}
+}
+(function(){try{const p=new URLSearchParams(location.search),r=p.get("d");if(r){const d=JSON.parse(decodeURIComponent(escape(atob(r))));Object.entries(d).forEach(([k,v])=>localStorage.setItem(k,JSON.stringify(v)));history.replaceState({},"",location.pathname);notif("✅ Données importées ! Bienvenue 💍");}}catch(e){}})();
+
+// ── NAV ──────────────────────────────────────────────────────────────
+function toggleMenu(){menuOpen=!menuOpen;document.getElementById("menu-overlay").style.display=menuOpen?"block":"none";document.getElementById("menu-panel").style.display=menuOpen?"block":"none";}
+function switchTab(id){activeTab=id;buildNav();renderContent();if(menuOpen)toggleMenu();}
+function buildNav(){
+  const tb=document.getElementById("tabbar"),mi=document.getElementById("menu-items");
+  tb.innerHTML="";mi.innerHTML="";
+  TABS.forEach(t=>{
+    const b=document.createElement("button");b.className="tab-btn"+(t.id===activeTab?" active":"");b.textContent=t.label;b.style.background=t.id===activeTab?t.color:"transparent";b.style.borderColor=t.id===activeTab?t.color:"#EDE0D4";b.onclick=()=>switchTab(t.id);tb.appendChild(b);
+    const m=document.createElement("button");m.className="menu-item"+(t.id===activeTab?" active":"");m.textContent=t.label;m.style.background=t.id===activeTab?t.color+"60":"none";m.onclick=()=>switchTab(t.id);mi.appendChild(m);
+  });
+}
+
+// ── CHECKLIST (générique) ─────────────────────────────────────────────
+function checklist(key,def,color,title){
+  let items=ld(key,def),note=ld(key+"_note","");
+  function r(){
+    const done=items.filter(i=>i.done).length,pct=items.length?Math.round(done/items.length*100):0;
+    let h=`<div class="pane"><h2 class="sec-title">${title}</h2>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-bar" style="width:${pct}%;background:${color}"></div></div><span class="prog-lbl">${done}/${items.length} (${pct}%)</span></div>`;
+    items.forEach((it,i)=>{h+=`<div class="check-item${it.done?" done":""}"><input type="checkbox"${it.done?" checked":""} style="accent-color:${color}" onchange="CL_toggle(${i})"><span class="item-text${it.done?" done":""}">${esc(it.text)}</span><button class="del-btn" onclick="CL_del(${i})">×</button></div>`;});
+    h+=`<div class="add-row"><input class="add-inp" id="cl-new" placeholder="Ajouter..." onkeydown="if(event.key==='Enter')CL_add()"><button class="add-btn" style="background:${color}" onclick="CL_add()">+</button></div>
+    <div class="note-box"><div class="note-lbl">📝 Notes</div><textarea placeholder="Cliquer pour ajouter des notes..." onchange="sv('${key}_note',this.value)">${esc(note)}</textarea></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.CL_toggle=function(i){items[i].done=!items[i].done;sv(key,items);r();};
+  window.CL_del=function(i){items.splice(i,1);sv(key,items);r();};
+  window.CL_add=function(){const e=document.getElementById("cl-new");if(!e||!e.value.trim())return;items.push({id:Date.now(),text:e.value.trim(),done:false});sv(key,items);r();};
+}
+
+// ── COUNTDOWN ────────────────────────────────────────────────────────
+function renderCountdown(){
+  const note=ld("welcome_note","Ajoutez ici une citation, un vœu, ou vos mots doux... ✨");
+  document.getElementById("content").innerHTML=`<div class="cd-wrap">
+    <div style="font-size:2.6rem;margin-bottom:8px">💍</div>
+    <h1 style="font-size:1.9rem;color:#C97080;font-weight:700;margin-bottom:4px">Notre Mariage</h1>
+    <p style="color:#9A8880;font-size:1rem;margin-bottom:22px">12 juin 2027</p>
+    <div class="cd-boxes">
+      <div class="cd-box"><div class="cd-num" id="cd-d">--</div><div class="cd-lbl">JOURS</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-h">--</div><div class="cd-lbl">HEURES</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-m">--</div><div class="cd-lbl">MINUTES</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-s">--</div><div class="cd-lbl">SECONDES</div></div>
+    </div>
+    <div class="quote-box">
+      <textarea id="wn" placeholder="Ajoutez une citation...">${esc(note)}</textarea>
+      <div style="font-size:0.68rem;color:#9A8880;text-align:right;margin-top:4px">✏️ cliquer pour modifier</div>
+    </div></div>`;
+  document.getElementById("wn").oninput=function(){sv("welcome_note",this.value);};
+  const wedding=new Date("2027-06-12");
+  function tick(){
+    const diff=wedding-new Date();
+    if(diff<=0){["d","h","m","s"].forEach(x=>{const e=document.getElementById("cd-"+x);if(e)e.textContent="00";});return;}
+    const vals={d:Math.floor(diff/86400000),h:Math.floor((diff%86400000)/3600000),m:Math.floor((diff%3600000)/60000),s:Math.floor((diff%60000)/1000)};
+    ["d","h","m","s"].forEach(x=>{const e=document.getElementById("cd-"+x);if(e)e.textContent=String(vals[x]).padStart(2,"0");});
+  }
+  tick();if(window._cdt)clearInterval(window._cdt);window._cdt=setInterval(tick,1000);
+}
+
+// ── RÉTROPLANNING ────────────────────────────────────────────────────
+function renderRetro(){
+  const def=[
+    {month:"Juin 2026 — 12 mois avant",tasks:["Définir le budget global","Choisir la date et le lieu","Établir la liste d'invités","Réserver le lieu","Choisir l'officiant"]},
+    {month:"Août 2026 — 10 mois avant",tasks:["Réserver photographe & vidéaste","Réserver DJ / orchestre","Recherche de robe","Choisir le traiteur"]},
+    {month:"Oct. 2026 — 8 mois avant",tasks:["Commander la robe","Choisir le thème & couleurs","Réserver le fleuriste","Réserver coiffeur & maquilleur","Planifier le voyage de noces"]},
+    {month:"Déc. 2026 — 6 mois avant",tasks:["Envoyer les save-the-date","Choisir le menu","Ouvrir la liste de mariage","Commencer la déco DIY"]},
+    {month:"Fév. 2027 — 4 mois avant",tasks:["Envoyer les faire-part","Réserver hôtel pour invités","Choisir les alliances","Valider le plan de table"]},
+    {month:"Avril 2027 — 2 mois avant",tasks:["Essai robe","Essai coiffure & maquillage","Confirmer tous les prestataires","Préparer les discours"]},
+    {month:"Mai 2027 — 1 mois avant",tasks:["Livraison de la robe","Réunion avec chaque prestataire","Préparer les cadeaux invités","Finaliser le plan de table"]},
+    {month:"Semaine J",tasks:["Récupérer tenue, alliance, documents","Briefing équipe & famille","Se reposer 💆‍♀️","12 juin : Dire OUI ! 💍"]},
+  ].map(m=>({...m,checked:m.tasks.map(()=>false),note:""}));
+  let items=ld("retro",def),oi=0;
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">🗓️ Rétroplanning</h2>`;
+    items.forEach((m,mi)=>{
+      const done=m.checked.filter(Boolean).length,pct=m.tasks.length?Math.round(done/m.tasks.length*100):0,isO=oi===mi;
+      h+=`<div class="card"${pct===100?' style="background:#D4E8D030"':''}>
+        <button class="card-hdr" onclick="RT_toggle(${mi})">
+          <span style="flex:1;font-weight:600;font-size:0.9rem;color:${pct===100?"#A8C5A0":"#5A4A42"}">${pct===100?"✅ ":""}${esc(m.month)}</span>
+          <div style="width:55px;background:#EDE0D4;border-radius:99px;height:6px;margin-right:6px"><div style="width:${pct}%;background:#C5B8E8;border-radius:99px;height:6px"></div></div>
+          <span style="font-size:0.76rem;color:#9A8880;margin-right:6px">${done}/${m.tasks.length}</span>
+          <span style="color:#9A8880">${isO?"▲":"▼"}</span>
+        </button>`;
+      if(isO){
+        h+=`<div class="card-body">`;
+        m.tasks.forEach((t,ti)=>{h+=`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #EDE0D4"><input type="checkbox"${m.checked[ti]?" checked":""} style="width:15px;height:15px;accent-color:#C5B8E8" onchange="RT_check(${mi},${ti})"><span style="font-size:0.87rem;color:${m.checked[ti]?"#9A8880":"#5A4A42"};text-decoration:${m.checked[ti]?"line-through":"none"}">${esc(t)}</span></div>`;});
+        h+=`<div class="add-row" style="margin-top:10px"><input class="add-inp" id="rt-a-${mi}" placeholder="Ajouter..." onkeydown="if(event.key==='Enter')RT_add(${mi})"><button class="add-btn" style="background:#C5B8E8" onclick="RT_add(${mi})">+</button></div>
+        <div class="note-box"><div class="note-lbl">📝 Note</div><textarea placeholder="Ajouter une note..." onchange="RT_note(${mi},this.value)">${esc(m.note||"")}</textarea></div></div>`;
+      }
+      h+=`</div>`;
+    });
+    h+=`</div>`;document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.RT_toggle=function(mi){oi=oi===mi?null:mi;r();};
+  window.RT_check=function(mi,ti){items[mi].checked[ti]=!items[mi].checked[ti];sv("retro",items);r();};
+  window.RT_add=function(mi){const e=document.getElementById("rt-a-"+mi);if(!e||!e.value.trim())return;items[mi].tasks.push(e.value.trim());items[mi].checked.push(false);sv("retro",items);r();};
+  window.RT_note=function(mi,v){items[mi].note=v;sv("retro",items);};
+}
+
+// ── PRESTATAIRES ──────────────────────────────────────────────────────
+function renderPrestataires(){
+  const def=[
+    {id:1,name:"Traiteur",tasks:["Dégustation","Signer le devis","Confirmer le menu","Acompte versé","Solde réglé"],checked:[false,false,false,false,false],note:""},
+    {id:2,name:"Photographe",tasks:["Contrat signé","Partager le programme","Réunion avant J","Acompte versé","Solde réglé"],checked:[false,false,false,false,false],note:""},
+    {id:3,name:"Vidéaste",tasks:["Contrat signé","Brief créatif","Acompte versé","Solde réglé"],checked:[false,false,false,false],note:""},
+    {id:4,name:"Fleuriste",tasks:["Choix des fleurs","Devis accepté","Acompte versé","Livraison confirmée"],checked:[false,false,false,false],note:""},
+    {id:5,name:"DJ / Musiciens",tasks:["Playlist partagée","Contrat signé","Acompte versé","Réunion avant J"],checked:[false,false,false,false],note:""},
+    {id:6,name:"Lieu de réception",tasks:["Visite","Réservation confirmée","Acompte versé","État des lieux"],checked:[false,false,false,false],note:""},
+    {id:7,name:"Mairie / Officiant",tasks:["Dossier déposé","Bans publiés","Documents fournis"],checked:[false,false,false],note:""},
+    {id:8,name:"Coiffeur / Maquilleur",tasks:["Essai réalisé","Réservation confirmée","Acompte versé"],checked:[false,false,false],note:""},
+  ];
+  let items=ld("prestataires_tasks",def),oi=null;
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">📋 Prestataires</h2>`;
+    items.forEach(p=>{
+      const done=p.checked.filter(Boolean).length,pct=p.tasks.length?Math.round(done/p.tasks.length*100):0,isO=oi===p.id;
+      h+=`<div class="card"><button class="card-hdr" onclick="PR_toggle(${p.id})">
+        <span style="flex:1;font-weight:600">${esc(p.name)}</span>
+        <div style="width:65px;background:#EDE0D4;border-radius:99px;height:6px;margin-right:6px"><div style="width:${pct}%;background:#F2A7B0;border-radius:99px;height:6px"></div></div>
+        <span style="font-size:0.76rem;color:#9A8880;margin-right:6px">${done}/${p.tasks.length}</span>
+        <span style="color:#9A8880">${isO?"▲":"▼"}</span></button>`;
+      if(isO){
+        h+=`<div class="card-body">`;
+        p.tasks.forEach((t,ti)=>{h+=`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #EDE0D4"><input type="checkbox"${p.checked[ti]?" checked":""} style="width:15px;height:15px;accent-color:#F2A7B0" onchange="PR_check(${p.id},${ti})"><span style="font-size:0.87rem;color:${p.checked[ti]?"#9A8880":"#5A4A42"};text-decoration:${p.checked[ti]?"line-through":"none"}">${esc(t)}</span></div>`;});
+        h+=`<div class="add-row" style="margin-top:10px"><input class="add-inp" id="pr-a-${p.id}" placeholder="Ajouter une tâche..." onkeydown="if(event.key==='Enter')PR_addTask(${p.id})"><button class="add-btn" style="background:#F2A7B0" onclick="PR_addTask(${p.id})">+</button></div>
+        <div class="note-box"><div class="note-lbl">📝 Note</div><textarea placeholder="Ajouter une note..." onchange="PR_note(${p.id},this.value)">${esc(p.note||"")}</textarea></div></div>`;
+      }
+      h+=`</div>`;
+    });
+    h+=`<div class="add-row"><input class="add-inp" id="pr-new" placeholder="Nouveau prestataire..." onkeydown="if(event.key==='Enter')PR_add()"><button class="add-btn" style="background:#F2A7B0" onclick="PR_add()">+</button></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.PR_toggle=function(id){oi=oi===id?null:id;r();};
+  window.PR_check=function(id,ti){const p=items.find(x=>x.id===id);if(p){p.checked[ti]=!p.checked[ti];sv("prestataires_tasks",items);r();}};
+  window.PR_addTask=function(id){const e=document.getElementById("pr-a-"+id);if(!e||!e.value.trim())return;const p=items.find(x=>x.id===id);if(p){p.tasks.push(e.value.trim());p.checked.push(false);sv("prestataires_tasks",items);r();}};
+  window.PR_note=function(id,v){const p=items.find(x=>x.id===id);if(p){p.note=v;sv("prestataires_tasks",items);}};
+  window.PR_add=function(){const e=document.getElementById("pr-new");if(!e||!e.value.trim())return;items.push({id:Date.now(),name:e.value.trim(),tasks:[],checked:[],note:""});sv("prestataires_tasks",items);r();};
+}
+
+// ── INVITÉS ───────────────────────────────────────────────────────────
+function renderInvites(){
+  let guests=ld("invites",[]),note=ld("invites_note","");
+  function r(){
+    const conf=guests.filter(g=>g.rsvp==="Confirmé").length,decl=guests.filter(g=>g.rsvp==="Décliné").length;
+    let h=`<div class="pane"><h2 class="sec-title">👥 Invités</h2>
+    <div class="stats-row">
+      <div class="stat-box" style="background:#C5B8E840"><div class="stat-num">${guests.length}</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-box" style="background:#A8C5A040"><div class="stat-num">${conf}</div><div class="stat-lbl">Confirmés</div></div>
+      <div class="stat-box" style="background:#F2A7B040"><div class="stat-num">${decl}</div><div class="stat-lbl">Déclinés</div></div>
+      <div class="stat-box" style="background:#E8C87A40"><div class="stat-num">${guests.length-conf-decl}</div><div class="stat-lbl">En attente</div></div>
+    </div>
+    <div class="form-card">
+      <div class="grid2"><input class="form-inp" id="g-p" placeholder="Prénom"><input class="form-inp" id="g-n" placeholder="Nom"></div>
+      <div class="grid3">
+        <select class="form-inp" id="g-s"><option>Mariée</option><option>Marié</option><option>Commun</option></select>
+        <select class="form-inp" id="g-r"><option>Adulte</option><option>Enfant</option><option>Bébé</option></select>
+        <select class="form-inp" id="g-v"><option>En attente</option><option>Confirmé</option><option>Décliné</option></select>
+      </div>
+      <div class="grid2"><input class="form-inp" id="g-re" placeholder="Régime alimentaire"><input class="form-inp" id="g-t" placeholder="Table n°"></div>
+      <button class="form-btn" style="background:#C5B8E8;color:#fff" onclick="GU_add()">+ Ajouter l'invité</button>
+    </div>`;
+    guests.forEach((g,i)=>{
+      const rc=g.rsvp==="Confirmé"?"#A8C5A0":g.rsvp==="Décliné"?"#F2A7B0":"#E8C87A";
+      h+=`<div class="guest-item">
+        <span style="flex:1;font-weight:600;min-width:100px">${esc(g.prenom)} ${esc(g.nom)}</span>
+        <span style="font-size:0.72rem;color:#9A8880">${esc(g.side)}·${esc(g.repas)}</span>
+        ${g.table?`<span style="font-size:0.72rem;color:#9A8880">T${esc(g.table)}</span>`:""}
+        ${g.regime?`<span style="background:#F7EDD4;border-radius:99px;padding:2px 8px;font-size:0.72rem">${esc(g.regime)}</span>`:""}
+        <select class="rsvp-sel" style="border-color:${rc};background:${rc}22" onchange="GU_rsvp(${i},this.value)">
+          <option${g.rsvp==="En attente"?" selected":""}>En attente</option>
+          <option${g.rsvp==="Confirmé"?" selected":""}>Confirmé</option>
+          <option${g.rsvp==="Décliné"?" selected":""}>Décliné</option>
+        </select>
+        <button style="background:none;border:none;color:#9A8880;font-size:1.1rem" onclick="GU_del(${i})">×</button>
+      </div>`;
+    });
+    h+=`<div class="note-box" style="margin-top:10px"><div class="note-lbl">📝 Notes</div><textarea placeholder="Notes invités..." onchange="sv('invites_note',this.value)">${esc(note)}</textarea></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.GU_add=function(){const p=gv("g-p"),n=gv("g-n");if(!p.trim()&&!n.trim())return;guests.push({prenom:p,nom:n,side:gv("g-s"),repas:gv("g-r"),rsvp:gv("g-v"),regime:gv("g-re"),table:gv("g-t"),id:Date.now()});sv("invites",guests);r();};
+  window.GU_del=function(i){guests.splice(i,1);sv("invites",guests);r();};
+  window.GU_rsvp=function(i,v){guests[i].rsvp=v;sv("invites",guests);r();};
+}
+
+// ── BUDGET ────────────────────────────────────────────────────────────
+function renderBudget(){
+  const def=[
+    {id:1,cat:"Lieu de réception",budget:8000,paid:0},{id:2,cat:"Traiteur",budget:12000,paid:0},
+    {id:3,cat:"Photographe",budget:2500,paid:0},{id:4,cat:"Vidéaste",budget:1800,paid:0},
+    {id:5,cat:"Fleuriste / Déco",budget:2000,paid:0},{id:6,cat:"DJ / Musique",budget:1500,paid:0},
+    {id:7,cat:"Robe de mariée",budget:2000,paid:0},{id:8,cat:"Costume",budget:800,paid:0},
+    {id:9,cat:"Faire-part",budget:400,paid:0},{id:10,cat:"Alliance",budget:1500,paid:0},
+    {id:11,cat:"Voyage de noces",budget:5000,paid:0},{id:12,cat:"Divers",budget:1000,paid:0},
+  ];
+  let items=ld("budget",def),note=ld("budget_note","");
+  function r(){
+    const tot=items.reduce((s,i)=>s+Number(i.budget||0),0),paid=items.reduce((s,i)=>s+Number(i.paid||0),0),pct=tot?Math.round(paid/tot*100):0;
+    let h=`<div class="pane"><h2 class="sec-title">💶 Budget</h2>
+    <div class="stats-row">
+      <div class="stat-box" style="background:#C5B8E830"><div class="stat-num" style="font-size:1.1rem">${tot.toLocaleString()}€</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-box" style="background:#A8C5A030"><div class="stat-num" style="font-size:1.1rem">${paid.toLocaleString()}€</div><div class="stat-lbl">Payé</div></div>
+      <div class="stat-box" style="background:#F2A7B030"><div class="stat-num" style="font-size:1.1rem">${(tot-paid).toLocaleString()}€</div><div class="stat-lbl">Restant</div></div>
+    </div>
+    <div style="background:#EDE0D4;border-radius:99px;height:10px;margin-bottom:16px"><div style="width:${pct}%;background:linear-gradient(90deg,#A8C5A0,#F2A7B0);border-radius:99px;height:10px"></div></div>`;
+    items.forEach(it=>{
+      const p=Number(it.budget)>0?Math.round(Number(it.paid)/Number(it.budget)*100):0;
+      h+=`<div class="budget-item"><span class="budget-cat">${esc(it.cat)}</span>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:0.7rem;color:#9A8880">Budget</span><input class="b-inp" type="number" value="${it.budget}" onchange="BU_upd(${it.id},'budget',this.value)">
+          <span style="font-size:0.7rem;color:#9A8880">Payé</span><input class="b-inp" type="number" value="${it.paid}" onchange="BU_upd(${it.id},'paid',this.value)">
+          <span style="font-size:0.78rem;font-weight:700;color:${p>=100?"#A8C5A0":"#E8C87A"}">${it.budget>0?p+"%":"—"}</span>
+        </div>
+        <button style="background:none;border:none;color:#9A8880;font-size:1.1rem" onclick="BU_del(${it.id})">×</button>
+      </div>`;
+    });
+    h+=`<div class="add-row"><input class="add-inp" id="bu-new" placeholder="Nouvelle catégorie..." onkeydown="if(event.key==='Enter')BU_add()"><button class="add-btn" style="background:#E8C87A" onclick="BU_add()">+</button></div>
+    <div class="note-box"><div class="note-lbl">📝 Notes</div><textarea placeholder="Notes..." onchange="sv('budget_note',this.value)">${esc(note)}</textarea></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.BU_upd=function(id,f,v){const it=items.find(x=>x.id===id);if(it){it[f]=Number(v);sv("budget",items);r();}};
+  window.BU_del=function(id){items=items.filter(x=>x.id!==id);sv("budget",items);r();};
+  window.BU_add=function(){const e=document.getElementById("bu-new");if(!e||!e.value.trim())return;items.push({id:Date.now(),cat:e.value.trim(),budget:0,paid:0});sv("budget",items);r();};
+}
+
+// ── PLAN DE TABLE ──────────────────────────────────────────────────────
+function renderPlanTable(){
+  let tables=ld("plan_table",[{id:1,name:"Table des mariés",seats:10,guests:[]},{id:2,name:"Table famille mariée",seats:8,guests:[]},{id:3,name:"Table famille marié",seats:8,guests:[]}]);
+  let oi=null,note=ld("plantable_note","");
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">🪑 Plan de table</h2>`;
+    tables.forEach(t=>{
+      const isO=oi===t.id;
+      h+=`<div class="card"><button class="card-hdr" onclick="PT_toggle(${t.id})">
+        <span style="flex:1;font-weight:600">${esc(t.name)}</span>
+        <span style="font-size:0.78rem;color:${t.guests.length>=t.seats?"#F2A7B0":"#9A8880"};margin-right:6px">${t.guests.length}/${t.seats}</span>
+        <span style="color:#9A8880">${isO?"▲":"▼"}</span></button>`;
+      if(isO){
+        h+=`<div class="card-body">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><span style="font-size:0.78rem;color:#9A8880">Places :</span><input type="number" value="${t.seats}" style="width:60px;border:1.5px solid #EDE0D4;border-radius:8px;padding:4px 6px;background:#FDF4EC;outline:none" onchange="PT_seats(${t.id},this.value)"></div>
+          <div style="margin-bottom:10px">`;
+        t.guests.forEach((g,gi)=>{h+=`<span class="guest-chip">${esc(g)}<button class="chip-del" onclick="PT_delG(${t.id},${gi})">×</button></span>`;});
+        h+=`</div><div class="add-row"><input class="add-inp" id="pt-g-${t.id}" placeholder="Ajouter un invité..." onkeydown="if(event.key==='Enter')PT_addG(${t.id})"><button class="add-btn" style="background:#F2A7B0" onclick="PT_addG(${t.id})">+</button></div>
+          <button onclick="PT_del(${t.id})" style="background:none;border:1px solid #EDE0D4;border-radius:8px;padding:4px 10px;font-size:0.76rem;color:#9A8880">Supprimer la table</button></div>`;
+      }
+      h+=`</div>`;
+    });
+    h+=`<div class="add-row"><input class="add-inp" id="pt-new" placeholder="Nom de la nouvelle table..." onkeydown="if(event.key==='Enter')PT_add()"><button class="add-btn" style="background:#F2A7B0" onclick="PT_add()">+</button></div>
+    <div class="note-box"><div class="note-lbl">📝 Notes</div><textarea placeholder="Notes..." onchange="sv('plantable_note',this.value)">${esc(note)}</textarea></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.PT_toggle=function(id){oi=oi===id?null:id;r();};
+  window.PT_seats=function(id,v){const t=tables.find(x=>x.id===id);if(t){t.seats=Number(v);sv("plan_table",tables);r();}};
+  window.PT_addG=function(id){const e=document.getElementById("pt-g-"+id);if(!e||!e.value.trim())return;const t=tables.find(x=>x.id===id);if(t){t.guests.push(e.value.trim());sv("plan_table",tables);r();}};
+  window.PT_delG=function(id,gi){const t=tables.find(x=>x.id===id);if(t){t.guests.splice(gi,1);sv("plan_table",tables);r();}};
+  window.PT_del=function(id){tables=tables.filter(x=>x.id!==id);oi=null;sv("plan_table",tables);r();};
+  window.PT_add=function(){const e=document.getElementById("pt-new");if(!e||!e.value.trim())return;tables.push({id:Date.now(),name:e.value.trim(),seats:8,guests:[]});sv("plan_table",tables);r();};
+}
+
+// ── VOYAGE ────────────────────────────────────────────────────────────
+function renderVoyage(){
+  let items=ld("voyage_checklist",[
+    {id:1,text:"Choisir la destination",done:false},{id:2,text:"Réserver les billets d'avion",done:false},
+    {id:3,text:"Réserver l'hôtel / logement",done:false},{id:4,text:"Vérifier les passeports (> 6 mois)",done:false},
+    {id:5,text:"Demander visa si nécessaire",done:false},{id:6,text:"Souscrire assurance voyage",done:false},
+    {id:7,text:"Vaccins / santé",done:false},{id:8,text:"Prévoir devises étrangères",done:false},
+    {id:9,text:"Préparer les valises",done:false},{id:10,text:"Activer roaming international",done:false},
+  ]);
+  function r(){
+    const dest=ld("voyage_dest",""),dates=ld("voyage_dates","");
+    const done=items.filter(i=>i.done).length,pct=items.length?Math.round(done/items.length*100):0;
+    let h=`<div class="pane"><h2 class="sec-title">🌴 Voyage de noces</h2>
+    <div style="background:linear-gradient(135deg,#D4E8D0,#E8E2F7);border-radius:16px;padding:18px;margin-bottom:16px">
+      <div style="margin-bottom:10px"><div style="font-size:0.7rem;color:#9A8880;margin-bottom:4px">🌍 Destination</div>
+        <input value="${esc(dest)}" placeholder="Ex: Maldives, Italie, Bali... ✈️" style="font-size:1.2rem;font-weight:700;border:none;background:transparent;color:#5A4A42;width:100%;outline:none" onchange="sv('voyage_dest',this.value)">
+      </div>
+      <div><div style="font-size:0.7rem;color:#9A8880;margin-bottom:4px">📅 Dates prévues</div>
+        <input value="${esc(dates)}" placeholder="Ex: 15 juin — 1er juillet 2027" style="border:none;background:transparent;color:#5A4A42;width:100%;outline:none;font-size:0.93rem" onchange="sv('voyage_dates',this.value)">
+      </div>
+    </div>
+    <div class="prog-row"><div class="prog-wrap"><div class="prog-bar" style="width:${pct}%;background:#A8C5A0"></div></div><span class="prog-lbl">${done}/${items.length}</span></div>`;
+    items.forEach((it,i)=>{h+=`<div class="check-item${it.done?" done":""}"><input type="checkbox"${it.done?" checked":""} style="accent-color:#A8C5A0" onchange="VO_toggle(${i})"><span class="item-text${it.done?" done":""}">${esc(it.text)}</span><button class="del-btn" onclick="VO_del(${i})">×</button></div>`;});
+    h+=`<div class="add-row"><input class="add-inp" id="vo-add" placeholder="Ajouter..." onkeydown="if(event.key==='Enter')VO_add()"><button class="add-btn" style="background:#A8C5A0" onclick="VO_add()">+</button></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.VO_toggle=function(i){items[i].done=!items[i].done;sv("voyage_checklist",items);r();};
+  window.VO_del=function(i){items.splice(i,1);sv("voyage_checklist",items);r();};
+  window.VO_add=function(){const e=document.getElementById("vo-add");if(!e||!e.value.trim())return;items.push({id:Date.now(),text:e.value.trim(),done:false});sv("voyage_checklist",items);r();};
+}
+
+// ── CONTACTS ──────────────────────────────────────────────────────────
+function renderContacts(){
+  let contacts=ld("contacts",[]);
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">📞 Contacts</h2>
+    <div class="form-card">
+      <div class="grid2"><input class="form-inp" id="c-nom" placeholder="Nom / Société"><input class="form-inp" id="c-role" placeholder="Rôle"><input class="form-inp" id="c-tel" placeholder="Téléphone" type="tel"><input class="form-inp" id="c-email" placeholder="Email" type="email"></div>
+      <input class="form-inp" id="c-note" placeholder="Note..." style="margin-bottom:8px">
+      <button class="form-btn" style="background:#F7D6C8;color:#C97080" onclick="CO_add()">+ Ajouter</button>
+    </div>`;
+    contacts.forEach((c,i)=>{h+=`<div class="contact-item">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div style="font-weight:700">${esc(c.nom)}</div>
+          ${c.role?`<div style="font-size:0.77rem;color:#F2A7B0;font-weight:600;margin-bottom:4px">${esc(c.role)}</div>`:""}
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            ${c.tel?`<a href="tel:${esc(c.tel)}" style="color:#A8C5A0;font-size:0.83rem">📞 ${esc(c.tel)}</a>`:""}
+            ${c.email?`<a href="mailto:${esc(c.email)}" style="color:#C5B8E8;font-size:0.83rem">✉️ ${esc(c.email)}</a>`:""}
+          </div>${c.note?`<div style="font-size:0.78rem;color:#9A8880;margin-top:3px">${esc(c.note)}</div>`:""}
+        </div>
+        <button onclick="CO_del(${i})" style="background:none;border:none;color:#9A8880;font-size:1.1rem">×</button>
+      </div></div>`;});
+    h+=`</div>`;document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.CO_add=function(){const n=gv("c-nom");if(!n.trim())return;contacts.push({nom:n,role:gv("c-role"),tel:gv("c-tel"),email:gv("c-email"),note:gv("c-note"),id:Date.now()});sv("contacts",contacts);r();};
+  window.CO_del=function(i){contacts.splice(i,1);sv("contacts",contacts);r();};
+}
+
+// ── TÉMOINS & DDH ─────────────────────────────────────────────────────
+function renderTemoins(){
+  const roles=["Témoin mariée","Témoin marié","Demoiselle d'honneur","Garçon d'honneur","Enfant d'honneur","Autre"];
+  const rcolors={"Témoin mariée":"#F2A7B0","Témoin marié":"#C5B8E8","Demoiselle d'honneur":"#F7D6C8","Garçon d'honneur":"#A8C5A0","Enfant d'honneur":"#E8C87A","Autre":"#EDE0D4"};
+  const defM=["Être présent(e) à la mairie","Signer le registre","Aider à l'organisation","Discours / toast","Coordonner le cortège","Gérer les imprévus"];
+  let members=ld("temoins",[]),oi=null;
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">👑 Témoins & Proches</h2>
+    <div class="form-card">
+      <div class="grid2"><input class="form-inp" id="tm-p" placeholder="Prénom"><input class="form-inp" id="tm-n" placeholder="Nom"><input class="form-inp" id="tm-tel" placeholder="Téléphone" type="tel"><input class="form-inp" id="tm-email" placeholder="Email" type="email"></div>
+      <select class="form-inp" id="tm-role" style="margin-bottom:8px">${roles.map(r=>`<option>${r}</option>`).join("")}</select>
+      <input class="form-inp" id="tm-note" placeholder="Note (taille robe, couleur costume...)" style="margin-bottom:8px">
+      <button class="form-btn" style="background:#C5B8E8;color:#fff" onclick="TM_add()">+ Ajouter</button>
+    </div>`;
+    members.forEach(m=>{
+      const isO=oi===m.id,done=m.missions.filter(ms=>ms.done).length,rc=rcolors[m.role]||"#EDE0D4";
+      h+=`<div class="card"><button class="card-hdr" onclick="TM_toggle(${m.id})">
+        <span class="role-chip" style="background:${rc}60">${esc(m.role)}</span>
+        <span style="flex:1;font-weight:700;margin-left:6px">${esc(m.prenom)} ${esc(m.nom)}</span>
+        <span style="font-size:0.74rem;color:#9A8880;margin-right:6px">${done}/${m.missions.length}</span>
+        <span style="color:#9A8880">${isO?"▲":"▼"}</span></button>`;
+      if(isO){
+        h+=`<div class="card-body">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+            ${m.tel?`<a href="tel:${esc(m.tel)}" style="color:#A8C5A0;font-size:0.83rem">📞 ${esc(m.tel)}</a>`:""}
+            ${m.email?`<a href="mailto:${esc(m.email)}" style="color:#C5B8E8;font-size:0.83rem">✉️ ${esc(m.email)}</a>`:""}
+          </div>
+          ${m.note?`<div style="background:#F7EDD4;border-radius:8px;padding:6px 10px;font-size:0.82rem;margin-bottom:10px">💛 ${esc(m.note)}</div>`:""}
+          <div style="font-size:0.73rem;color:#9A8880;font-weight:700;letter-spacing:.06em;margin-bottom:6px">MISSIONS</div>`;
+        m.missions.forEach((ms,mi)=>{h+=`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #EDE0D4"><input type="checkbox"${ms.done?" checked":""} style="width:15px;height:15px;accent-color:#C5B8E8" onchange="TM_checkM(${m.id},${mi})"><span style="font-size:0.86rem;color:${ms.done?"#9A8880":"#5A4A42"};text-decoration:${ms.done?"line-through":"none"}">${esc(ms.text)}</span></div>`;});
+        h+=`<div class="add-row" style="margin-top:10px"><input class="add-inp" id="tm-am-${m.id}" placeholder="Ajouter une mission..." onkeydown="if(event.key==='Enter')TM_addM(${m.id})"><button class="add-btn" style="background:#C5B8E8" onclick="TM_addM(${m.id})">+</button></div>
+        <div class="note-box"><div class="note-lbl">📝 Note complémentaire</div><textarea placeholder="Notes..." onchange="TM_note(${m.id},this.value)">${esc(m.note2||"")}</textarea></div>
+        <button onclick="TM_del(${m.id})" style="margin-top:10px;background:none;border:1px solid #EDE0D4;border-radius:8px;padding:4px 10px;font-size:0.76rem;color:#9A8880">Supprimer</button>
+        </div>`;
+      }
+      h+=`</div>`;
+    });
+    h+=`</div>`;document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.TM_add=function(){const p=gv("tm-p"),n=gv("tm-n");if(!p.trim()&&!n.trim())return;members.push({id:Date.now(),prenom:p,nom:n,role:gv("tm-role"),tel:gv("tm-tel"),email:gv("tm-email"),note:gv("tm-note"),note2:"",missions:defM.map(m=>({text:m,done:false}))});sv("temoins",members);r();};
+  window.TM_toggle=function(id){oi=oi===id?null:id;r();};
+  window.TM_checkM=function(id,mi){const m=members.find(x=>x.id===id);if(m){m.missions[mi].done=!m.missions[mi].done;sv("temoins",members);r();}};
+  window.TM_addM=function(id){const e=document.getElementById("tm-am-"+id);if(!e||!e.value.trim())return;const m=members.find(x=>x.id===id);if(m){m.missions.push({text:e.value.trim(),done:false});sv("temoins",members);r();}};
+  window.TM_note=function(id,v){const m=members.find(x=>x.id===id);if(m){m.note2=v;sv("temoins",members);}};
+  window.TM_del=function(id){members=members.filter(x=>x.id!==id);oi=null;sv("temoins",members);r();};
+}
+
+// ── MUSIQUES ──────────────────────────────────────────────────────────
+function renderMusiques(){
+  const moments=[
+    {id:"cortege",label:"🚶 Entrée du cortège",desc:"Lorsque les invités prennent place",color:"#FAD4D8"},
+    {id:"mariee",label:"👰 Entrée de la mariée",desc:"Le moment le plus attendu !",color:"#F2A7B0"},
+    {id:"ceremonie",label:"🕊️ Pendant la cérémonie",desc:"Fond musical, lectures, rituels",color:"#E8E2F7"},
+    {id:"sortie",label:"💑 Sortie des mariés",desc:"La célébration commence !",color:"#C5B8E8"},
+    {id:"cocktail",label:"🥂 Cocktail",desc:"Ambiance détendue, conviviale",color:"#F7EDD4"},
+    {id:"diner",label:"🍽️ Dîner",desc:"Fond musical pendant le repas",color:"#D4E8D0"},
+    {id:"bal",label:"💃 Ouverture du bal",desc:"Votre première danse en tant que mariés",color:"#F7D6C8"},
+    {id:"soiree",label:"🎉 Soirée dansante",desc:"Playlist pour faire danser tout le monde",color:"#A8C5A0"},
+    {id:"last",label:"🌙 Dernière danse",desc:"La chanson qui clôture la soirée",color:"#EDE0D4"},
+  ];
+  let data=ld("musiques",moments.map(m=>({...m,songs:[],note:""})));
+  let oi=null;
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">🎵 Musiques</h2><p class="subtitle">Organisez vos choix moment par moment ✨</p>`;
+    data.forEach(m=>{
+      const isO=oi===m.id,val=m.songs.filter(s=>s.validated).length;
+      h+=`<div class="card music-card" style="border-left-color:${m.color}"><button class="card-hdr" onclick="MU_toggle('${m.id}')">
+        <div style="flex:1"><div style="font-weight:700;font-size:0.92rem">${m.label}</div><div style="font-size:0.72rem;color:#9A8880">${m.desc}</div></div>
+        <span style="font-size:0.76rem;color:${m.songs.length>0?"#A8C5A0":"#9A8880"};margin-right:6px">${m.songs.length>0?`${val}/${m.songs.length} ✓`:"0 titre"}</span>
+        <span style="color:#9A8880">${isO?"▲":"▼"}</span></button>`;
+      if(isO){
+        h+=`<div class="card-body">`;
+        m.songs.forEach((s,si)=>{h+=`<div class="song-item${s.validated?" ok":""}"><input type="checkbox"${s.validated?" checked":""} style="accent-color:#A8C5A0" onchange="MU_toggleS('${m.id}',${si})"><span style="flex:1;font-size:0.88rem">🎵 ${esc(s.text)}</span><button onclick="MU_delS('${m.id}',${si})" style="background:none;border:none;color:#9A8880;font-size:1rem">×</button></div>`;});
+        h+=`<div class="add-row" style="margin-top:8px"><input class="add-inp" id="mu-a-${m.id}" placeholder="Titre — Artiste..." onkeydown="if(event.key==='Enter')MU_add('${m.id}')"><button class="add-btn" style="background:${m.color==='#EDE0D4'?"#A8C5A0":m.color}" onclick="MU_add('${m.id}')">+</button></div>
+        <div class="note-box"><div class="note-lbl">📝 Note</div><textarea placeholder="Notes..." onchange="MU_note('${m.id}',this.value)">${esc(m.note||"")}</textarea></div></div>`;
+      }
+      h+=`</div>`;
+    });
+    h+=`</div>`;document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.MU_toggle=function(id){oi=oi===id?null:id;r();};
+  window.MU_add=function(id){const e=document.getElementById("mu-a-"+id);if(!e||!e.value.trim())return;const m=data.find(x=>x.id===id);if(m){m.songs.push({id:Date.now(),text:e.value.trim(),validated:false});sv("musiques",data);r();}};
+  window.MU_toggleS=function(id,si){const m=data.find(x=>x.id===id);if(m){m.songs[si].validated=!m.songs[si].validated;sv("musiques",data);r();}};
+  window.MU_delS=function(id,si){const m=data.find(x=>x.id===id);if(m){m.songs.splice(si,1);sv("musiques",data);r();}};
+  window.MU_note=function(id,v){const m=data.find(x=>x.id===id);if(m){m.note=v;sv("musiques",data);}};
+}
+
+// ── VŒUX & DISCOURS ───────────────────────────────────────────────────
+function renderVoeux(){
+  const def=[
+    {id:"vm",label:"💍 Vœux de la mariée",icon:"👰",text:"",done:false},
+    {id:"vma",label:"💍 Vœux du marié",icon:"🤵",text:"",done:false},
+    {id:"dt",label:"🥂 Discours des témoins",icon:"🎤",text:"",done:false},
+    {id:"dp",label:"❤️ Discours des parents",icon:"👨‍👩‍👧",text:"",done:false},
+    {id:"lp",label:"📖 Lectures / Poèmes",icon:"📜",text:"",done:false},
+    {id:"rem",label:"🙏 Remerciements",icon:"💛",text:"",done:false},
+  ];
+  let items=ld("voeux",def),oi=null;
+  function r(){
+    let h=`<div class="pane"><h2 class="sec-title">💌 Vœux & Discours</h2><p class="subtitle">Rédigez et sauvegardez tous vos textes au même endroit 📝</p>`;
+    items.forEach(it=>{
+      const isO=oi===it.id,wc=it.text.trim()?it.text.trim().split(/\s+/).length:0;
+      h+=`<div class="card disc-card" style="border-left-color:${it.done?"#A8C5A0":"#E8C87A"}"><button class="card-hdr" onclick="VX_toggle('${it.id}')">
+        <span style="font-size:1.2rem;margin-right:4px">${it.icon}</span>
+        <span style="flex:1;font-weight:600;color:${it.done?"#A8C5A0":"#5A4A42"};text-decoration:${it.done?"line-through":"none"}">${esc(it.label)}</span>
+        ${wc>0?`<span style="font-size:0.72rem;color:#9A8880;margin-right:8px">${wc} mots</span>`:""}
+        <input type="checkbox"${it.done?" checked":""} onclick="event.stopPropagation()" onchange="VX_done('${it.id}',this.checked)" style="width:16px;height:16px;accent-color:#A8C5A0;margin-right:8px">
+        <span style="color:#9A8880">${isO?"▲":"▼"}</span></button>`;
+      if(isO){h+=`<div class="card-body"><textarea class="disc-ta" placeholder="Rédigez ici..." onchange="VX_save('${it.id}',this.value)">${esc(it.text)}</textarea>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-size:0.72rem;color:#9A8880">${wc} mots · ~${Math.ceil(wc/130)} min</span>
+          <button onclick="VX_del('${it.id}')" style="background:none;border:1px solid #EDE0D4;border-radius:6px;padding:2px 8px;font-size:0.74rem;color:#9A8880">Supprimer</button>
+        </div></div>`;}
+      h+=`</div>`;
+    });
+    h+=`<div class="add-row"><input class="add-inp" id="vx-new" placeholder="Ajouter un discours..." onkeydown="if(event.key==='Enter')VX_add()"><button class="add-btn" style="background:#E8C87A" onclick="VX_add()">+</button></div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.VX_toggle=function(id){oi=oi===id?null:id;r();};
+  window.VX_save=function(id,v){const it=items.find(x=>x.id===id);if(it){it.text=v;sv("voeux",items);}};
+  window.VX_done=function(id,v){const it=items.find(x=>x.id===id);if(it){it.done=v;sv("voeux",items);r();}};
+  window.VX_del=function(id){items=items.filter(x=>x.id!==id);oi=null;sv("voeux",items);r();};
+  window.VX_add=function(){const e=document.getElementById("vx-new");if(!e||!e.value.trim())return;items.push({id:"c"+Date.now(),label:e.value.trim(),icon:"✍️",text:"",done:false});sv("voeux",items);r();};
+}
+
+// ── LISTE DE MARIAGE ──────────────────────────────────────────────────
+function renderCadeaux(){
+  let items=ld("cadeaux",[
+    {id:1,nom:"Batterie de cuisine",categorie:"Cuisine",prix:150,recu:false,note:""},
+    {id:2,nom:"Robot pâtissier",categorie:"Cuisine",prix:400,recu:false,note:""},
+    {id:3,nom:"Contribution voyage de noces",categorie:"Voyage",prix:0,recu:false,note:"Libre"},
+    {id:4,nom:"Linge de maison",categorie:"Maison",prix:120,recu:false,note:""},
+  ]);
+  function r(){
+    const tot=items.reduce((s,i)=>s+Number(i.prix||0),0),recu=items.filter(i=>i.recu).length;
+    let h=`<div class="pane"><h2 class="sec-title">🎁 Liste de mariage</h2>
+    <div class="stats-row">
+      <div class="stat-box" style="background:#C5B8E830"><div class="stat-num">${items.length}</div><div class="stat-lbl">Cadeaux</div></div>
+      <div class="stat-box" style="background:#A8C5A030"><div class="stat-num">${recu}</div><div class="stat-lbl">Reçus ✓</div></div>
+      <div class="stat-box" style="background:#F2A7B030"><div class="stat-num">${items.length-recu}</div><div class="stat-lbl">Restants</div></div>
+      <div class="stat-box" style="background:#F7EDD4"><div class="stat-num" style="font-size:1rem">${tot}€</div><div class="stat-lbl">Valeur</div></div>
+    </div>
+    <div class="form-card">
+      <div class="grid2"><input class="form-inp" id="cd-n" placeholder="Nom du cadeau"><input class="form-inp" id="cd-c" placeholder="Catégorie"><input class="form-inp" id="cd-p" placeholder="Prix (€)" type="number"><input class="form-inp" id="cd-note" placeholder="Note"></div>
+      <button class="form-btn" style="background:#D4E8D0;color:#5A4A42" onclick="CA_add()">+ Ajouter à la liste</button>
+    </div>`;
+    items.forEach((it,i)=>{h+=`<div class="check-item${it.recu?" done":""}"><input type="checkbox"${it.recu?" checked":""} style="accent-color:#A8C5A0" onchange="CA_toggle(${i})">
+      <div style="flex:1"><div style="font-weight:600;${it.recu?"text-decoration:line-through;color:#9A8880":""}">${esc(it.nom)}</div><div style="font-size:0.72rem;color:#9A8880">${esc(it.categorie)}${it.note?" · "+esc(it.note):""}</div></div>
+      ${it.prix>0?`<span style="font-size:0.82rem;font-weight:600">${it.prix}€</span>`:""}
+      <button class="del-btn" onclick="CA_del(${i})">×</button></div>`;});
+    h+=`</div>`;document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.CA_add=function(){const n=gv("cd-n");if(!n.trim())return;items.push({id:Date.now(),nom:n,categorie:gv("cd-c"),prix:Number(gv("cd-p"))||0,note:gv("cd-note"),recu:false});sv("cadeaux",items);r();};
+  window.CA_toggle=function(i){items[i].recu=!items[i].recu;sv("cadeaux",items);r();};
+  window.CA_del=function(i){items.splice(i,1);sv("cadeaux",items);r();};
+}
+
+// ── JOUR J ────────────────────────────────────────────────────────────
+function renderJourJ(){
+  const def=[
+    {id:1,heure:"08:00",label:"Réveil & petit-déjeuner des mariés",done:false,note:""},
+    {id:2,heure:"09:00",label:"Coiffure & maquillage de la mariée",done:false,note:""},
+    {id:3,heure:"11:00",label:"Habillage de la mariée",done:false,note:""},
+    {id:4,heure:"11:30",label:"Photos préparatifs",done:false,note:""},
+    {id:5,heure:"12:00",label:"First look (optionnel)",done:false,note:""},
+    {id:6,heure:"13:00",label:"Départ pour la cérémonie",done:false,note:""},
+    {id:7,heure:"14:00",label:"Cérémonie laïque / civile",done:false,note:""},
+    {id:8,heure:"15:00",label:"Sortie des mariés & pétales",done:false,note:""},
+    {id:9,heure:"15:15",label:"Photos de groupe & couple",done:false,note:""},
+    {id:10,heure:"16:30",label:"Cocktail",done:false,note:""},
+    {id:11,heure:"19:30",label:"Entrée en salle & dîner",done:false,note:""},
+    {id:12,heure:"21:00",label:"Discours & toasts",done:false,note:""},
+    {id:13,heure:"22:00",label:"Ouverture du bal",done:false,note:""},
+    {id:14,heure:"22:30",label:"Soirée dansante",done:false,note:""},
+    {id:15,heure:"00:00",label:"Pièce montée / dessert",done:false,note:""},
+  ];
+  let events=ld("jourj",def),globalNote=ld("jourj_note","");
+  function r(){
+    const done=events.filter(e=>e.done).length,pct=events.length?Math.round(done/events.length*100):0;
+    let h=`<div class="pane"><h2 class="sec-title">📅 Programme du Jour J</h2>
+    <p class="subtitle">12 juin 2027 · ${done}/${events.length} étapes</p>
+    <div style="background:#EDE0D4;border-radius:99px;height:8px;margin-bottom:18px"><div style="width:${pct}%;background:linear-gradient(90deg,#F2A7B0,#C5B8E8);border-radius:99px;height:8px"></div></div>
+    <div class="timeline">`;
+    events.forEach(ev=>{h+=`<div class="tl-item">
+      <div class="tl-dot${ev.done?" done":""}"></div>
+      <div class="tl-card${ev.done?" done":""}">
+        <div class="tl-row">
+          <input type="checkbox"${ev.done?" checked":""} style="width:16px;height:16px;accent-color:#A8C5A0" onchange="JJ_toggle(${ev.id})">
+          <input class="tl-t" value="${esc(ev.heure)}" placeholder="HH:MM" onchange="JJ_h(${ev.id},this.value)">
+          <input class="tl-l" value="${esc(ev.label)}" onchange="JJ_l(${ev.id},this.value)" style="color:${ev.done?"#9A8880":"#5A4A42"}">
+          <button onclick="JJ_del(${ev.id})" style="background:none;border:none;color:#9A8880;font-size:1rem">×</button>
+        </div>
+        ${ev.note?`<div style="font-size:0.79rem;color:#9A8880;padding:4px 0 0 24px">${esc(ev.note)}</div>`:""}
+        <button onclick="JJ_editNote(${ev.id})" style="background:none;border:none;color:#9A8880;font-size:0.7rem;padding:3px 0 0 24px;cursor:pointer">${ev.note?"✏️ modifier la note":"+ note"}</button>
+      </div></div>`;});
+    h+=`</div>
+    <div class="add-row" style="margin-top:14px;flex-wrap:wrap">
+      <input id="jj-h" placeholder="HH:MM" style="width:68px;border:1.5px solid #EDE0D4;border-radius:10px;padding:8px;background:#FDF4EC;outline:none">
+      <input id="jj-l" placeholder="Nouvelle étape..." class="add-inp" onkeydown="if(event.key==='Enter')JJ_add()">
+      <button class="add-btn" style="background:#F2A7B0" onclick="JJ_add()">+</button>
+    </div>
+    <div class="note-box" style="margin-top:10px"><div class="note-lbl">📝 Notes générales</div>
+      <textarea placeholder="Notes du Jour J..." onchange="sv('jourj_note',this.value)">${esc(globalNote)}</textarea>
+    </div></div>`;
+    document.getElementById("content").innerHTML=h;
+  }
+  r();
+  window.JJ_toggle=function(id){const e=events.find(x=>x.id===id);if(e){e.done=!e.done;sv("jourj",events);r();}};
+  window.JJ_h=function(id,v){const e=events.find(x=>x.id===id);if(e){e.heure=v;sv("jourj",events);}};
+  window.JJ_l=function(id,v){const e=events.find(x=>x.id===id);if(e){e.label=v;sv("jourj",events);}};
+  window.JJ_del=function(id){events=events.filter(x=>x.id!==id);sv("jourj",events);r();};
+  window.JJ_add=function(){const h=document.getElementById("jj-h"),l=document.getElementById("jj-l");if(!l||!l.value.trim())return;events.push({id:Date.now(),heure:h?h.value:"",label:l.value.trim(),done:false,note:""});sv("jourj",events);r();};
+  window.JJ_editNote=function(id){const e=events.find(x=>x.id===id);if(!e)return;const v=prompt("Note pour cette étape :",e.note||"");if(v!==null){e.note=v;sv("jourj",events);r();}};
+}
+
+// ── ROUTING ───────────────────────────────────────────────────────────
+function renderContent(){
+  if(window._cdt){clearInterval(window._cdt);window._cdt=null;}
+  document.getElementById("content").innerHTML="";
+  switch(activeTab){
+    case "countdown":    renderCountdown();break;
+    case "retro":        renderRetro();break;
+    case "todo":         checklist("todo_main",[{id:1,text:"Définir le budget global",done:false},{id:2,text:"Choisir la date officielle",done:false},{id:3,text:"Réserver la salle de réception",done:false},{id:4,text:"Déposer le dossier en mairie",done:false},{id:5,text:"Envoyer les save-the-date",done:false},{id:6,text:"Commander les faire-part",done:false},{id:7,text:"Choisir la robe",done:false},{id:8,text:"Choisir les alliances",done:false},{id:9,text:"Organiser le EVJF / EVG",done:false},{id:10,text:"Préparer le voyage de noces",done:false}],"#A8C5A0","✅ Tâches générales");break;
+    case "prestataires": renderPrestataires();break;
+    case "ceremony":     checklist("ceremony",[{id:1,text:"Choisir l'officiant(e)",done:false},{id:2,text:"Écrire les vœux",done:false},{id:3,text:"Choisir les témoins",done:false},{id:4,text:"Préparer le déroulé",done:false},{id:5,text:"Choisir les musiques",done:false},{id:6,text:"Prévoir les lectures / poèmes",done:false},{id:7,text:"Décider des rituels (sable, bougie...)",done:false},{id:8,text:"Préparer le programme",done:false},{id:9,text:"Répétition la veille",done:false}],"#F2A7B0","🕊️ Cérémonie laïque");break;
+    case "deco":         checklist("deco",[{id:1,text:"Définir le thème & couleurs",done:false},{id:2,text:"Centres de table",done:false},{id:3,text:"Arche fleurie / autel",done:false},{id:4,text:"Chemin de table",done:false},{id:5,text:"Marque-places",done:false},{id:6,text:"Panneau de bienvenue",done:false},{id:7,text:"Éclairage & bougies",done:false},{id:8,text:"Pièce montée / wedding cake",done:false},{id:9,text:"Décoration extérieure",done:false},{id:10,text:"Photobooth / livre d'or",done:false}],"#A8C5A0","🌸 Décoration");break;
+    case "fairepart":    checklist("fairepart",[{id:1,text:"Choisir le design",done:false},{id:2,text:"Rédiger le texte",done:false},{id:3,text:"Valider la maquette",done:false},{id:4,text:"Commander l'impression",done:false},{id:5,text:"Préparer les enveloppes",done:false},{id:6,text:"Rédiger les adresses",done:false},{id:7,text:"Poster les faire-part (J-4 mois)",done:false},{id:8,text:"Save the date envoyés",done:false},{id:9,text:"Créer un site de mariage",done:false}],"#E8C87A","✉️ Faire-part");break;
+    case "invites":      renderInvites();break;
+    case "plantable":    renderPlanTable();break;
+    case "budget":       renderBudget();break;
+    case "voyage":       renderVoyage();break;
+    case "contacts":     renderContacts();break;
+    case "temoins":      renderTemoins();break;
+    case "musiques":     renderMusiques();break;
+    case "voeux":        renderVoeux();break;
+    case "cadeaux":      renderCadeaux();break;
+    case "jourj":        renderJourJ();break;
+  }
+}
+
+buildNav();
+renderContent();
+</script>
+</body>
+</html>
